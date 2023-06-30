@@ -92,12 +92,12 @@ app.put('/restrictionGroup', async (req, res) => {
 
 app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
-  const restrictions = await db.collection(restrictionsCol).list().results;
-  const restrictionGroups = await db.collection(restrictionGroupsCol).list().results;
+  const restrictions = await db.collection(restrictionsCol).list();
+  const restrictionGroups = await db.collection(restrictionGroupsCol).list();
   res.json({
     sunset: sunset.format(),
-    restrictions: restrictions,
-    restrictionGroups: restrictionGroups,
+    restrictions: restrictions.results,
+    restrictionGroups: restrictionGroups.results,
     activeProgramID: 0
   }).end();
 });
@@ -110,6 +110,9 @@ async function getSunsetTime() {
     const axiosRes = await axios.get('https://api.sunrise-sunset.org/json?lat=42.3598986&lng=-71.0730733&formatted=0');
     const timeInUTC = moment(axiosRes.data.results.sunset);
     lastSunset = timeInUTC.utcOffset(-5);
+    if(lastSunset.isDST()){
+      lastSunset.add(1, 'hour');
+    }
     lastTime = moment();
   }
   return lastSunset;
