@@ -92,7 +92,7 @@ app.put('/restrictionGroup', async (req, res) => {
 app.get('/fotv', (req, res) => {
   getSunsetTime(async (timeInUTC) => {
     const restrictions = await db.collection(restrictionsCol).list();
-    const restrictionGroups = await db.collection(restrictionGroups).list();
+    const restrictionGroups = await db.collection(restrictionGroupsCol).list();
     res.json({
       sunset: timeInUTC,
       restrictions: restrictions,
