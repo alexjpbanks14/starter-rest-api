@@ -3,6 +3,7 @@ const app = express()
 const db = require('@cyclic.sh/dynamodb')
 var cors = require('cors');
 const axios = require('axios');
+const moment = require('moment');
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -89,26 +90,29 @@ app.put('/restrictionGroup', async (req, res) => {
   res.json(value);
 })
 
-app.get('/fotv', (req, res) => {
-  getSunsetTime(async (timeInUTC) => {
-    const restrictions = await db.collection(restrictionsCol).list();
-    const restrictionGroups = await db.collection(restrictionGroupsCol).list();
-    res.json({
-      sunset: timeInUTC,
-      restrictions: restrictions,
-      restrictionGroups: restrictionGroups,
-      activeProgramID: 0
-    }).end();
-  })
+app.get('/fotv', async (req, res) => {
+  const sunset = getSunsetTime();
+  const restrictions = await db.collection(restrictionsCol).list();
+  const restrictionGroups = await db.collection(restrictionGroupsCol).list();
+  res.json({
+    sunset: sunset.format(),
+    restrictions: restrictions,
+    restrictionGroups: restrictionGroups,
+    activeProgramID: 0
+  }).end();
 });
 
-function getSunsetTime(res) {
-  axios.get('https://api.sunrise-sunset.org/json?lat=42.3598986&lng=-71.0730733').then((axiosRes) => {
-    const timeInUTC = axiosRes.data.results.sunset
-    res(timeInUTC);
-  }).catch((e) => {
-    throw e;
-  })
+const lastSunset = null;
+const lastTime = moment();
+
+async function getSunsetTime() {
+  if(lastSunset == null || abs(lastTime.diff(moment(), 'hour')) >= 12){
+    const axiosRes = await axios.get('https://api.sunrise-sunset.org/json?lat=42.3598986&lng=-71.0730733');
+    const timeInUTC = moment(axiosRes.data.results.sunset);
+    lastSunset = timeInUTC.subtract(5, 'hour');
+    lastTime = moment();
+  }
+  return lastSunset;
 }
 
 const flagRegex = /".*"/
