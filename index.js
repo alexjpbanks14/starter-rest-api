@@ -91,11 +91,11 @@ app.put('/restrictionGroup', async (req, res) => {
 })
 
 app.get('/fotv', async (req, res) => {
-  const sunset = getSunsetTime();
+  const sunset = await getSunsetTime();
   const restrictions = await db.collection(restrictionsCol).list();
   const restrictionGroups = await db.collection(restrictionGroupsCol).list();
   res.json({
-    sunset: sunset.toString(),
+    sunset: sunset.format(),
     restrictions: restrictions,
     restrictionGroups: restrictionGroups,
     activeProgramID: 0
