@@ -77,17 +77,50 @@ app.get('/:col', async (req, res) => {
   res.json(items).end()
 })
 */
+
+//42.35989864993693, -71.07307337127115
+
+const restrictionsCol = 'restrictions';
+
+app.put('/restrictions', async (req, res) => {
+  const id = req.json.restrictionID;
+  const value = await db.collection(restrictionsCol).set(id, req.json);
+  res.json(value);
+})
+
 app.get('/fotv', (req, res) => {
-  res.json({
-    sunset: '7:59',
-    restrictions: [{
-      title: 'No Boats',
-      active: true,
-      group: 'Green'
-    }],
-    activeProgramID: 0
-  }).end();
+  getSunsetTime(async (timeInUTC) => {
+    const restrictions = await db.collection(restrictionsCol).list();
+    res.json({
+      sunset: timeInUTC,
+      restrictions: [{
+        restrictionID: 0,
+        title: 'No Boats',
+        active: true,
+        groupID: 0,
+        backgroundColor: '#FFFFFF',
+        textColor: '#000000',
+        fontWeight: 'normal'
+      }],
+      restrictionGroups: [
+        {
+          groupID: 0,
+          title: 'Red'
+        }
+      ],
+      activeProgramID: 0
+    }).end();
+  })
 });
+
+function getSunsetTime(res) {
+  axios.get('https://api.sunrise-sunset.org/json?lat=42.3598986&lng=-71.0730733').then((axiosRes) => {
+    const timeInUTC = axiosRes.data.results.sunset
+    res(timeInUTC);
+  }).catch((e) => {
+    throw e;
+  })
+}
 
 const flagRegex = /".*"/
 
