@@ -75,33 +75,28 @@ app.get('/:col', async (req, res) => {
 //42.35989864993693, -71.07307337127115
 
 const restrictionsCol = 'restrictions';
+const restrictionGroupsCol = 'restrictionGroups';
 
-app.put('/restrictions', async (req, res) => {
+app.put('/restriction', async (req, res) => {
   const id = req.json.restrictionID;
   const value = await db.collection(restrictionsCol).set(id, req.json);
+  res.json(value);
+})
+
+app.put('/restrictionGroup', async (req, res) => {
+  const id = req.json.groupID;
+  const value = await db.collection(restrictionGroupsCol).set(id, req.json);
   res.json(value);
 })
 
 app.get('/fotv', (req, res) => {
   getSunsetTime(async (timeInUTC) => {
     const restrictions = await db.collection(restrictionsCol).list();
+    const restrictionGroups = await db.collection(restrictionGroups).list();
     res.json({
       sunset: timeInUTC,
-      restrictions: [{
-        restrictionID: 0,
-        title: 'No Boats',
-        active: true,
-        groupID: 0,
-        backgroundColor: '#FFFFFF',
-        textColor: '#000000',
-        fontWeight: 'normal'
-      }],
-      restrictionGroups: [
-        {
-          groupID: 0,
-          title: 'Red'
-        }
-      ],
+      restrictions: restrictions,
+      restrictionGroups: restrictionGroups,
       activeProgramID: 0
     }).end();
   })
