@@ -1,9 +1,26 @@
 const express = require('express')
 const app = express()
 const db = require('@cyclic.sh/dynamodb')
+var cors = require('cors');
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+var allowedOrigins = ['https://localhost:8081',
+                      'http://yourapp.com'];
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
