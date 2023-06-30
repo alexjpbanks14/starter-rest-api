@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }))
 // #############################################################################
 
 // Create or Update an item
-app.post('/:col/:key', async (req, res) => {
+/*app.post('/:col/:key', async (req, res) => {
   console.log(req.body)
 
   const col = req.params.col
@@ -60,6 +60,18 @@ app.get('/:col', async (req, res) => {
   console.log(JSON.stringify(items, null, 2))
   res.json(items).end()
 })
+*/
+app.get('/fotv', (req, res) => {
+  res.json({
+    sunset: '7:59',
+    restrictions: [{
+      title: 'No Boats',
+      active: true,
+      group: 'Green'
+    }],
+    activeProgramID: 0
+  }).end();
+});
 
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
