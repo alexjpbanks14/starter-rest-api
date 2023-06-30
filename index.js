@@ -102,8 +102,8 @@ app.get('/fotv', async (req, res) => {
   }).end();
 });
 
-const lastSunset = null;
-const lastTime = moment();
+var lastSunset = null;
+var lastTime = moment();
 
 async function getSunsetTime() {
   if(lastSunset == null || abs(lastTime.diff(moment(), 'hour')) >= 12){
