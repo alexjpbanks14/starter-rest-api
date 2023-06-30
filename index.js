@@ -6,12 +6,10 @@ var cors = require('cors');
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-var allowedOrigins = ['https://localhost:8081',
+var allowedOrigins = ['http://localhost:8081',
                       'http://yourapp.com'];
 app.use(cors({
   origin: function(origin, callback){
-    // allow requests with no origin 
-    // (like mobile apps or curl requests)
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){
       var msg = 'The CORS policy for this site does not ' +
