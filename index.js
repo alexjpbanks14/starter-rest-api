@@ -91,9 +91,11 @@ app.get('/fotv', (req, res) => {
 
 app.get('/flag-color', (req, res) => {
   axios.get('https://api.community-boating.org/api/flag').then((axiosRes) => {
-    console.log(axiosRes);
+    res.json({
+      flagColor: axiosRes.data
+    })
   }).catch((e) => {
-    console.log(e);
+    throw e;
   })
 });
 
