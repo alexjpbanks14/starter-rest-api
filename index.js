@@ -95,7 +95,7 @@ app.get('/fotv', async (req, res) => {
   const restrictions = await db.collection(restrictionsCol).list();
   const restrictionGroups = await db.collection(restrictionGroupsCol).list();
   res.json({
-    sunset: sunset.format(),
+    sunset: sunset.toString(),
     restrictions: restrictions,
     restrictionGroups: restrictionGroups,
     activeProgramID: 0
