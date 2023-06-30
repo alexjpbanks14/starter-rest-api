@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const db = require('@cyclic.sh/dynamodb')
 var cors = require('cors');
+const axios = require('axios');
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -86,6 +87,14 @@ app.get('/fotv', (req, res) => {
     }],
     activeProgramID: 0
   }).end();
+});
+
+app.get('/flag-color', (req, res) => {
+  axios.get('https://api.community-boating.org/api/flag').then((axiosRes) => {
+    res.json({
+      flagColor: toString(axiosRes)
+    });
+  })
 });
 
 // Catch all handler for all other request.
