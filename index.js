@@ -83,7 +83,7 @@ async function updateCreateREST(req, col, key){
   var toSet = req.body;
   if(id == -1){
     const latest = await db.collection(col).latest();
-    toSet.id = String(latest ? Number(latest.$index) + 1 : 0);
+    toSet.id = String(latest ? Number(latest[key]) + 1 : 0);
   }
   return await db.collection(col).set(toSet.id, toSet);
 }
