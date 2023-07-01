@@ -92,7 +92,7 @@ async function updateCreateREST(req, col, key){
     const latest = await db.collection(col).latest();
     delete toSet[key];
     if(latest)
-      newID = String(NanZero(Number(latest.key)) + 1);
+      newID = String(NaNZero(Number(latest.key)) + 1);
   }
   return await db.collection(col).set(newID, toSet);
 }
