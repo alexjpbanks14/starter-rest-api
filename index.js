@@ -78,6 +78,9 @@ app.get('/:col', async (req, res) => {
 const restrictionsCol = 'restrictions';
 const restrictionGroupsCol = 'restrictionGroups';
 
+const restrictionsID = 'restrictionID';
+const restrictionGroupsID = 'groupID';
+
 function NaNZero(v){
   if(isNaN(v))
     return 0;
@@ -98,14 +101,18 @@ async function updateCreateREST(req, col, key){
 }
 
 app.post('/restriction', async (req, res) => {
-  const item = await updateCreateREST(req, restrictionsCol, 'restrictionID');
+  const item = await updateCreateREST(req, restrictionsCol, restrictionsID);
   res.json(item);
 })
 
 app.post('/restrictionGroup', async (req, res) => {
-  const item = await updateCreateREST(req, restrictionGroupsCol, 'groupID');
+  const item = await updateCreateREST(req, restrictionGroupsCol, restrictionGroupsID);
   res.json(item);
 })
+
+function adaptDBToJson(list, key){
+  return list.results.map((a) => ({...a, [key]: a.key}));
+}
 
 app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
@@ -114,8 +121,8 @@ app.get('/fotv', async (req, res) => {
   db.collection('').list
   res.json({
     sunset: sunset.format(),
-    restrictions: restrictions.results,
-    restrictionGroups: restrictionGroups.results,
+    restrictions: adaptDBToJson(restrictions, restrictionsID), 
+    restrictionGroups: adaptDBToJson(restrictionGroups, restrictionGroupsID),
     activeProgramID: 0
   }).end();
 });
