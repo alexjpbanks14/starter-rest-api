@@ -78,13 +78,13 @@ app.get('/:col', async (req, res) => {
 const restrictionsCol = 'restrictions';
 const restrictionGroupsCol = 'restrictionGroups';
 
-app.put('/restriction', async (req, res) => {
+app.post('/restriction', async (req, res) => {
   const id = req.json.restrictionID;
   const value = await db.collection(restrictionsCol).set(id, req.json);
   res.json(value);
 })
 
-app.put('/restrictionGroup', async (req, res) => {
+app.post('/restrictionGroup', async (req, res) => {
   const id = req.json.groupID;
   var toSet = req.json;
   if(id == -1){
@@ -139,7 +139,6 @@ app.get('/flag-color', (req, res) => {
 
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
-  console.log(req.url);
   res.json({ msg: 'no route handler found' }).end()
 })
 
