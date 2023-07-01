@@ -85,7 +85,7 @@ async function updateCreateREST(req, col, key){
     const latest = await db.collection(col).latest();
     toSet.id = String(latest ? Number(latest.$index) + 1 : 0);
   }
-  return await db.collection(col).set(id, toSet);
+  return await db.collection(col).set(toSet.id, toSet);
 }
 
 app.post('/restriction', async (req, res) => {
