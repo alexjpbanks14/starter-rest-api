@@ -78,15 +78,21 @@ app.get('/:col', async (req, res) => {
 const restrictionsCol = 'restrictions';
 const restrictionGroupsCol = 'restrictionGroups';
 
+function NaNZero(v){
+  if(isNaN(v))
+    return 0;
+  return v;
+}
+
 async function updateCreateREST(req, col, key){
   const id = req.body[key];
   var toSet = req.body;
-  var newID = 0;
+  var newID = "0";
   if(id == -1){
     const latest = await db.collection(col).latest();
     delete toSet[key];
     if(latest)
-      console.log(latest)
+      newID = String(NanZero(Number(latest.key)) + 1);
   }
   return await db.collection(col).set(newID, toSet);
 }
