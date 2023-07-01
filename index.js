@@ -86,7 +86,12 @@ app.put('/restriction', async (req, res) => {
 
 app.put('/restrictionGroup', async (req, res) => {
   const id = req.json.groupID;
-  const value = await db.collection(restrictionGroupsCol).set(id, req.json);
+  var toSet = req.json;
+  if(id == -1){
+    const latest = await db.collection(restrictionGroupsCol).latest();
+    toSet.id = latest.$index + 1;
+  }
+  const value = await db.collection(restrictionGroupsCol).set(id, toSet);
   res.json(value);
 })
 
@@ -94,6 +99,7 @@ app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
   const restrictions = await db.collection(restrictionsCol).list();
   const restrictionGroups = await db.collection(restrictionGroupsCol).list();
+  db.collection('').list
   res.json({
     sunset: sunset.format(),
     restrictions: restrictions.results,
@@ -111,7 +117,7 @@ async function getSunsetTime() {
     const timeInUTC = moment(axiosRes.data.results.sunset);
     lastSunset = timeInUTC.utcOffset(-5);
     if(lastSunset.isDST()){
-      lastSunset.add(1, 'hour');
+      lastSunset = lastSunset.add(1, 'hour');
     }
     lastTime = moment();
   }
