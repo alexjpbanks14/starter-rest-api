@@ -139,6 +139,7 @@ app.get('/flag-color', (req, res) => {
 
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
+  console.log(req.url);
   res.json({ msg: 'no route handler found' }).end()
 })
 
