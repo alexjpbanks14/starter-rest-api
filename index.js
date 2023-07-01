@@ -111,7 +111,7 @@ app.post('/restrictionGroup', async (req, res) => {
 })
 
 function adaptDBToJson(list, key){
-  return list.results.map((a) => ({...a, [key]: a.key}));
+  return list.results.map((a) => ({...a.props, [key]: a.key}));
 }
 
 app.get('/fotv', async (req, res) => {
