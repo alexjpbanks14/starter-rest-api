@@ -79,14 +79,14 @@ const restrictionsCol = 'restrictions';
 const restrictionGroupsCol = 'restrictionGroups';
 
 app.post('/restriction', async (req, res) => {
-  const id = req.json.restrictionID;
-  const value = await db.collection(restrictionsCol).set(id, req.json);
+  const id = req.body.restrictionID;
+  const value = await db.collection(restrictionsCol).set(id, req.body);
   res.json(value);
 })
 
 app.post('/restrictionGroup', async (req, res) => {
-  const id = req.json.groupID;
-  var toSet = req.json;
+  const id = req.body.groupID;
+  var toSet = req.body;
   if(id == -1){
     const latest = await db.collection(restrictionGroupsCol).latest();
     toSet.id = latest.$index + 1;
