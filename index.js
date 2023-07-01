@@ -81,11 +81,14 @@ const restrictionGroupsCol = 'restrictionGroups';
 async function updateCreateREST(req, col, key){
   const id = req.body[key];
   var toSet = req.body;
+  var newID = 0;
   if(id == -1){
     const latest = await db.collection(col).latest();
-    toSet.id = String(latest ? Number(latest[key]) + 1 : 0);
+    delete toSet[key];
+    if(latest)
+      console.log(latest)
   }
-  return await db.collection(col).set(toSet.id, toSet);
+  return await db.collection(col).set(newID, toSet);
 }
 
 app.post('/restriction', async (req, res) => {
