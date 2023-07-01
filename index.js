@@ -78,21 +78,24 @@ app.get('/:col', async (req, res) => {
 const restrictionsCol = 'restrictions';
 const restrictionGroupsCol = 'restrictionGroups';
 
+async function updateCreateREST(req, col, key){
+  const id = req.body[key];
+  var toSet = req.body;
+  if(id == -1){
+    const latest = await db.collection(col).latest();
+    toSet.id = latest ? latest.$index + 1 : 0;
+  }
+  return await db.collection(col).set(id, toSet);
+}
+
 app.post('/restriction', async (req, res) => {
-  const id = req.body.restrictionID;
-  const value = await db.collection(restrictionsCol).set(id, req.body);
-  res.json(value);
+  const item = await updateCreateREST(req, restrictionsCol, 'restrictionID');
+  res.json(item);
 })
 
 app.post('/restrictionGroup', async (req, res) => {
-  const id = req.body.groupID;
-  var toSet = req.body;
-  if(id == -1){
-    const latest = await db.collection(restrictionGroupsCol).latest();
-    toSet.id = latest.$index + 1;
-  }
-  const value = await db.collection(restrictionGroupsCol).set(id, toSet);
-  res.json(value);
+  const item = await updateCreateREST(req, restrictionGroupsCol, 'groupID');
+  res.json(item);
 })
 
 app.get('/fotv', async (req, res) => {
