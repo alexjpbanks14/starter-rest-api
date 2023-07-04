@@ -121,7 +121,7 @@ app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
   const restrictions = await db.collection(restrictionsCol).list();
   const restrictionGroups = await db.collection(restrictionGroupsCol).list();
-  console.log(restrictions);
+  console.log(restrictions[0].props);
   res.json({
     sunset: sunset.format(),
     restrictions: adaptDBToJson(restrictions, restrictionsID), 
