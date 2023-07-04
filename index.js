@@ -81,6 +81,8 @@ const restrictionGroupsCol = 'restrictionGroups';
 const restrictionsID = 'restrictionID';
 const restrictionGroupsID = 'groupID';
 
+
+
 function NaNZero(v){
   if(isNaN(v))
     return 0;
@@ -97,14 +99,14 @@ async function updateCreateREST(req, col, key){
     if(latest)
       newID = String(NaNZero(Number(latest.key)) + 1);
   }
-  console.log(toSet);
   const result = await db.collection(col).set(newID, toSet);
   return {...result.props, [key]: result.key};
 }
 
 app.get('/dbtest', async (req, res) => {
-  await db.collection('test').set('yolo', {one: 'two'});
-  const a = await db.collection('test').list();
+  const derp = db.collection('test');
+  await derp.set('yolo', {one: 'two'});
+  const a = await derp.list();
   res.json(a).end();
 })
 
