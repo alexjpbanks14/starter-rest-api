@@ -102,7 +102,7 @@ async function updateCreateREST(req, col, key){
 }
 
 app.get('/dbtest', async (req, res) => {
-  await db.collection('test').set('yolo', 'one');
+  await db.collection('test').set('yolo', {one: 'two'});
   const a = await db.collection('test').get('yolo');
   res.json(a).end();
 })
