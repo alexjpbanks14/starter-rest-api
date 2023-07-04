@@ -98,7 +98,9 @@ async function updateCreateREST(req, col, key){
     if(latest)
       newID = String(NaNZero(Number(latest.key)) + 1);
   }
-  return await adaptDBToJson({results: [db.collection(col).set(newID, toSet)]}, key);
+  const result = await db.collection(col).set(newID, toSet);
+  console.log(result);
+  return adaptDBToJson({results: [result]}, key);
 }
 
 app.post('/restriction', async (req, res) => {
@@ -119,7 +121,6 @@ app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
   const restrictions = await db.collection(restrictionsCol).list();
   const restrictionGroups = await db.collection(restrictionGroupsCol).list();
-  db.collection('').list
   res.json({
     sunset: sunset.format(),
     restrictions: adaptDBToJson(restrictions, restrictionsID), 
