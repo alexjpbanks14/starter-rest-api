@@ -100,7 +100,7 @@ async function updateCreateREST(req, col, key){
   }
   const result = await db.collection(col).set(newID, toSet);
   console.log(result);
-  return adaptDBToJson({results: [result]}, key);
+  return {...result.props, [key]: result.key};
 }
 
 app.post('/restriction', async (req, res) => {
