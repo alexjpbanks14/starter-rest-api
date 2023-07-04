@@ -90,14 +90,14 @@ function NaNZero(v){
 async function updateCreateREST(req, col, key){
   const id = req.body[key];
   var toSet = req.body;
+  delete toSet[key];
   var newID = "0";
-  if(id == -1){
+  if(id == 'NEW'){
     const latest = await db.collection(col).latest();
-    delete toSet[key];
     if(latest)
       newID = String(NaNZero(Number(latest.key)) + 1);
   }
-  return await db.collection(col).set(newID, toSet);
+  return await adaptDBToJson({results: [db.collection(col).set(newID, toSet)]}, key);
 }
 
 app.post('/restriction', async (req, res) => {
