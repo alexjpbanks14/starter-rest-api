@@ -91,6 +91,7 @@ async function updateCreateREST(req, col, key){
   const id = req.body[key];
   var toSet = req.body;
   delete toSet[key];
+  console.log(toSet);
   var newID = "0";
   if(id == 'NEW'){
     const latest = await db.collection(col).latest();
