@@ -91,7 +91,6 @@ async function updateCreateREST(req, col, key){
   const id = req.body[key];
   var toSet = req.body;
   delete toSet[key];
-  console.log(toSet);
   var newID = "0";
   if(id == 'NEW'){
     const latest = await db.collection(col).latest();
@@ -99,18 +98,23 @@ async function updateCreateREST(req, col, key){
       newID = String(NaNZero(Number(latest.key)) + 1);
   }
   const result = await db.collection(col).set(newID, toSet);
-  console.log(result);
   return {...result.props, [key]: result.key};
 }
 
+app.get('/dbtest', async (req, res) => {
+  await db.collection('test').set('yolo', 'one');
+  const a = await db.collection('test').get('yolo');
+  res.json(a).end();
+})
+
 app.post('/restriction', async (req, res) => {
   const item = await updateCreateREST(req, restrictionsCol, restrictionsID);
-  res.json(item);
+  res.json(item).end();
 })
 
 app.post('/restrictionGroup', async (req, res) => {
   const item = await updateCreateREST(req, restrictionGroupsCol, restrictionGroupsID);
-  res.json(item);
+  res.json(item).end();
 })
 
 function adaptDBToJson(list, key){
@@ -153,7 +157,7 @@ app.get('/flag-color', (req, res) => {
     const flagColor = axiosRes.data.toString().match(flagRegex)[0].replaceAll('\"', '');
     res.json({
       flagColor: flagColor
-    })
+    }).end();
   }).catch((e) => {
     throw e;
   })
