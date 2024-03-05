@@ -126,13 +126,13 @@ function adaptDBToJson(list, key){
 
 app.get('/fotv', async (req, res) => {
   const sunset = await getSunsetTime();
-  const restrictions = await db.collection(restrictionsCol).list();
-  const restrictionGroups = await db.collection(restrictionGroupsCol).list();
-  console.log(restrictions.results[0].props);
+  //const restrictions = await db.collection(restrictionsCol).list();
+  //const restrictionGroups = await db.collection(restrictionGroupsCol).list();
+  //console.log(restrictions.results[0].props);
   res.json({
     sunset: sunset.format(),
-    restrictions: adaptDBToJson(restrictions, restrictionsID), 
-    restrictionGroups: adaptDBToJson(restrictionGroups, restrictionGroupsID),
+    restrictions: [],//adaptDBToJson(restrictions, restrictionsID), 
+    restrictionGroups: [],// adaptDBToJson(restrictionGroups, restrictionGroupsID),
     activeProgramID: 0
   }).end();
 });
